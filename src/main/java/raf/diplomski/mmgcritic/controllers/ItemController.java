@@ -10,7 +10,7 @@ import raf.diplomski.mmgcritic.services.ItemService;
 @CrossOrigin
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value="/api/items")
+@RequestMapping(value = "/api/items")
 public class ItemController {
     private final ItemService itemService;
 }

@@ -1,4 +1,26 @@
 package raf.diplomski.mmgcritic.data.entities.games;
 
 public enum GameGenre {
-}
+    ADVENTURE,
+    ACTION,
+    SPORTS,
+    SIMULATION,
+    PLATFORMER,
+    RPG,
+    FIRST_PERSON_SHOOTER,
+    ACTION_ADVENTURE,
+    FIGHTING,
+    REAL_TIME_STRATEGY,
+    RACING,
+    SHOOTER,
+    PUZZLE,
+    CASUAL,
+    STRATEGY,
+    MMORPG,
+    STEALTH,
+    PARTY,
+    ARPG,
+    TACTICAL_RP,
+    SURVIVAL,
+    BATTLE_ROYALE,
+    }

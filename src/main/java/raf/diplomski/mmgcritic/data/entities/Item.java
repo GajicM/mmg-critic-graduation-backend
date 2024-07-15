@@ -21,7 +21,7 @@ public class Item {
     private String videoUrl;
     private String description;
     private Double finalGrade;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviewList;
     private Long releaseDate;
 }
