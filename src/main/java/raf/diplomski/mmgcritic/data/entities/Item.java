@@ -15,7 +15,7 @@ import java.util.List;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "item_type", discriminatorType = DiscriminatorType.STRING)
 public class Item {
-    @Id
+    @Id @GeneratedValue
     private Long id;
     private String name;
     private String videoUrl;
