@@ -7,6 +7,7 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import raf.diplomski.mmgcritic.data.entities.user.User;
 
 @Entity
 @Data
@@ -25,5 +26,8 @@ public class Review {
 
     @ManyToOne
     private Item item;
+
+    @ManyToOne
+    private User user;
 }
 

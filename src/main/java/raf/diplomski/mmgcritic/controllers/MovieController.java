@@ -46,7 +46,7 @@ public class MovieController {
     }
 
     @PutMapping("/update-game")
-    public ResponseEntity<?> updatMovie(@RequestBody Movie movie) {
+    public ResponseEntity<?> updateMovie(@RequestBody Movie movie) {
         try {
             return ResponseEntity.ok(movieService.updateMovie(movie));
         } catch (Exception e) {
