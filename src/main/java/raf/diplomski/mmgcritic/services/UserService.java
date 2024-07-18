@@ -3,6 +3,7 @@ package raf.diplomski.mmgcritic.services;
 import org.springframework.stereotype.Service;
 import raf.diplomski.mmgcritic.data.dto.RegisterDto;
 import raf.diplomski.mmgcritic.data.dto.UserDto;
+import raf.diplomski.mmgcritic.data.entities.user.Role;
 import raf.diplomski.mmgcritic.data.entities.user.User;
 
 import java.util.List;
@@ -18,4 +19,6 @@ public interface UserService {
     Boolean updatePassword(String oldPassword,String newPassword);
 
     UserDto register(RegisterDto registerDto);
+
+    UserDto updateRole(Long id, Role role);
 }

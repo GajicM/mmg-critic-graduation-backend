@@ -1,9 +1,6 @@
 package raf.diplomski.mmgcritic.data.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +12,7 @@ import raf.diplomski.mmgcritic.data.entities.user.User;
 @AllArgsConstructor
 @Table(name = "reviews")
 public class Review {
-    @Id
+    @Id @GeneratedValue
     private Long id;
 
     private String comment;
@@ -27,7 +24,7 @@ public class Review {
     @ManyToOne
     private Item item;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private User user;
 }
 

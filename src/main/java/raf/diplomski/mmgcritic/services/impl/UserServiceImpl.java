@@ -10,8 +10,10 @@ import raf.diplomski.mmgcritic.data.entities.user.User;
 import raf.diplomski.mmgcritic.data.mapper.UserMapper;
 import raf.diplomski.mmgcritic.repositories.UserRepository;
 import raf.diplomski.mmgcritic.services.UserService;
+import raf.diplomski.mmgcritic.utils.SpringSecurityUtil;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -62,10 +64,18 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    //TODO
+    //TODO fix and add ifs later
     @Override
     public Boolean updatePassword(String oldPassword,String newPassword) {
-        return null;
+        Optional<User> optionalUser = userRepository.findByEmail(SpringSecurityUtil.getPrincipalEmail());
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setPassword(encoder.encode(newPassword));
+            userRepository.save(user);
+            return true;
+        }
+        return false;
+
     }
 
     //TODO
@@ -79,6 +89,13 @@ public class UserServiceImpl implements UserService {
         u.setRole(Role.USER);
         u.setPassword(encoder.encode(registerDto.getPassword()));
         return userMapper.toDto(userRepository.save(u));
+    }
+
+    @Override
+    public UserDto updateRole(Long id, Role role) {
+       User u=userRepository.findById(id).orElseThrow();
+       u.setRole(role);
+       return userMapper.toDto(userRepository.save(u))  ;
     }
 
 

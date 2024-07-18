@@ -22,12 +22,12 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public List<ReviewDto> getReviewsForUser(Long userId) {
-        return reviewRepository.findAllForUserId(userId).stream().map(mapper::toDto).toList();
+        return reviewRepository.findAllByUser_Id(userId).stream().map(mapper::toDto).toList();
     }
 
     @Override
     public List<ReviewDto> getReviewsForItem(Long itemId) {
-        return reviewRepository.findAllByItemId(itemId).stream().map(mapper::toDto).toList();
+        return reviewRepository.findAllByItem_Id(itemId).stream().map(mapper::toDto).toList();
     }
 
     @Override

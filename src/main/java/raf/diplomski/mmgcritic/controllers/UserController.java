@@ -2,7 +2,10 @@ package raf.diplomski.mmgcritic.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import raf.diplomski.mmgcritic.data.dto.PasswordChangeDto;
+import raf.diplomski.mmgcritic.data.entities.user.Role;
 import raf.diplomski.mmgcritic.data.entities.user.User;
 import raf.diplomski.mmgcritic.services.UserService;
 
@@ -55,9 +58,9 @@ public class UserController {
     }
     //TODO FIX
     @PutMapping("/update-password")
-    public ResponseEntity<?> updatePassword(@RequestBody String oldPassword, @RequestBody String newPassword){
+    public ResponseEntity<?> updatePassword(@RequestBody PasswordChangeDto passwordChangeDto){
         try{
-            return ResponseEntity.ok(userService.updatePassword(oldPassword,newPassword));
+            return ResponseEntity.ok(userService.updatePassword(passwordChangeDto.getOldPassword(), passwordChangeDto.getNewPassword()));
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e);
         }
@@ -66,7 +69,16 @@ public class UserController {
     public ResponseEntity<?> deletePassword(@PathVariable Long id){
         return ResponseEntity.ok(userService.deleteUser(id));
     }
-
+    @PutMapping("/update-role/{id}")
+    @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> updateUserRole(@PathVariable Long id,@RequestBody Role role){
+        try {
+            return ResponseEntity.ok(userService.updateRole(id, role));
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 
 
