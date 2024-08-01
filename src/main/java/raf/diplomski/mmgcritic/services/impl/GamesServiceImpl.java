@@ -1,9 +1,9 @@
 package raf.diplomski.mmgcritic.services.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import raf.diplomski.mmgcritic.data.entities.games.Game;
+import raf.diplomski.mmgcritic.data.entities.games.GameGenre;
 import raf.diplomski.mmgcritic.repositories.GameRepository;
 
 import java.util.List;
@@ -23,7 +23,7 @@ public class GamesServiceImpl {
     }
 
     public Game getGameByName(String name) {
-        return gameRepository.findByName(name).orElseThrow();
+        return gameRepository.findAllByTitle(name).orElseThrow();
     }
 
     public Game addNewGame(Game game) {
@@ -49,4 +49,31 @@ public class GamesServiceImpl {
         }
 
     }
+    public List<Game> findAllByTitleContaining(String name){
+        return gameRepository.findAllByTitleContains(name);
+    }
+    public List<Game> getNewGamesByGenre(GameGenre genre){
+        return gameRepository.getNewGamesByGenre(genre);
+    }
+    public List<Game> getNewGamesByReleaseDate(){
+        return gameRepository.getNewGamesByReleaseDate();
+    }
+
+    public List<Game> getTopRatedByDeveloper(String developer){
+        return gameRepository.getTopRatedByDeveloper(developer);
+    }
+    public List<Game> getNewGamesByTopRated(){
+        return gameRepository.getNewGamesByTopRated();
+    }
+    public List<Game> getGamesByPlatform(String platform){
+        return gameRepository.getGamesByPlatform(platform);
+    }
+
+
+
+
+
+
+
+
 }

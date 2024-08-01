@@ -4,9 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import raf.diplomski.mmgcritic.data.entities.movies.Actor;
-import raf.diplomski.mmgcritic.services.ActorService;
-
-import java.util.List;
+import raf.diplomski.mmgcritic.services.impl.ActorService;
 
 @RestController
 @CrossOrigin

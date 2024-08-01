@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import raf.diplomski.mmgcritic.data.entities.games.Game;
+import raf.diplomski.mmgcritic.data.entities.games.GameGenre;
 import raf.diplomski.mmgcritic.services.impl.GamesServiceImpl;
 
 @RestController
@@ -62,5 +63,34 @@ public class GamesController {
             return ResponseEntity.badRequest().build();
         }
     }
+    @GetMapping("/title-containing/{title}")
+    public ResponseEntity<?> findAllByTitleContaining(@PathVariable  String title){
+
+        return ResponseEntity.ok(gamesService.findAllByTitleContaining(title));
+    }
+    @GetMapping("/new-by-genre/{genre}")
+    public ResponseEntity<?>  getNewGamesByGenre(@PathVariable GameGenre genre){
+        return ResponseEntity.ok(gamesService.getNewGamesByGenre(genre)) ;
+    }
+    @GetMapping("/new-by-release")
+    public ResponseEntity<?>  getNewGamesByReleaseDate(){
+        return ResponseEntity.ok(gamesService.getNewGamesByReleaseDate());
+    }
+    @GetMapping("/top-by-developer/{developer}")
+    public ResponseEntity<?>  getTopRatedByDeveloper(@PathVariable String developer){
+        return ResponseEntity.ok(gamesService.getTopRatedByDeveloper(developer));
+    }
+    @GetMapping("/new-by-top")
+    public ResponseEntity<?>  getNewGamesByTopRated(){
+        return ResponseEntity.ok(gamesService.getNewGamesByTopRated());
+    }
+    @GetMapping("/by-platform/{platform}")
+    public ResponseEntity<?>  getGamesByPlatform(@PathVariable String platform){
+        return ResponseEntity.ok(gamesService.getGamesByPlatform(platform));
+    }
+
+
+
+
 
 }

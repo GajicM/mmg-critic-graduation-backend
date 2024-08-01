@@ -46,7 +46,7 @@ public class SpringSecurityConfig {
                 .authorizeHttpRequests(
                         requests -> requests
                                 .requestMatchers(new AntPathRequestMatcher("/api/games/**")).permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/api/movie/**")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/api/movies/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/api/music/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/api/review/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/swagger-ui/**")).permitAll()

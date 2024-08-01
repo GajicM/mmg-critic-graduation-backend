@@ -1,4 +1,4 @@
-package raf.diplomski.mmgcritic.services;
+package raf.diplomski.mmgcritic.services.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

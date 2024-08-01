@@ -2,10 +2,12 @@ package raf.diplomski.mmgcritic.bootstrap;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 import raf.diplomski.mmgcritic.data.entities.games.Game;
-import raf.diplomski.mmgcritic.data.entities.games.GameGenre;
+import raf.diplomski.mmgcritic.data.entities.movies.Movie;
 import raf.diplomski.mmgcritic.repositories.GameRepository;
+import raf.diplomski.mmgcritic.repositories.MovieRepository;
 
 import java.util.List;
 
@@ -13,17 +15,27 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BootstrapData  implements CommandLineRunner {
     private final GameRepository gameRepository;
+    private final ResourceLoader resourceLoader;
+    private final CSVProcessor moviesCsvLoader;
+    private final MovieRepository movieRepository;
+
     @Override
     public void run(String... args) throws Exception {
-        Game g=new Game();
-        g.setDescription("desc");
-        g.setFinalGrade(10.0);
-        g.setPlatforms(List.of("PC"));
-        g.setGameGenres(List.of(GameGenre.PUZZLE));
-        g.setName("BG3");
-        g.setDeveloper("IDKF");
-        g.setReleaseDate(180000000L);
-        g.setReviewList(List.of());
-        gameRepository.save(g);
+        if(movieRepository.count()==0){
+            List<Movie> movies=moviesCsvLoader.loadMovies();
+            if(movies!=null){
+                movieRepository.saveAll(movies);
+                System.out.println("lmao done");
+            }
+        }
+        System.out.println("movies done");
+        if(gameRepository.count()==0){
+            List<Game> movies=moviesCsvLoader.loadGames();
+            if(movies!=null){
+                gameRepository.saveAll(movies);
+                System.out.println("lmao done");
+            }
+        }
+
     }
 }
