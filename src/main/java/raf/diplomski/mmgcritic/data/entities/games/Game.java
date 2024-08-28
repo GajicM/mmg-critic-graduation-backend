@@ -22,7 +22,7 @@ public class Game  {
     private String description;
     private Double finalGrade;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Review> reviewList;
+    private List<Review> reviews;
     private Long releaseDate;
     private String publisher;
     private String developer;

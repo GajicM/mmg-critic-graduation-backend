@@ -9,6 +9,9 @@ import raf.diplomski.mmgcritic.data.entities.games.Game;
 import raf.diplomski.mmgcritic.data.entities.games.GameGenre;
 import raf.diplomski.mmgcritic.data.entities.movies.Movie;
 import raf.diplomski.mmgcritic.data.entities.movies.MovieGenre;
+import raf.diplomski.mmgcritic.data.entities.music.Artist;
+import raf.diplomski.mmgcritic.data.entities.music.Music;
+import raf.diplomski.mmgcritic.repositories.ArtistRepository;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -20,9 +23,17 @@ import java.util.*;
 public class CSVProcessor {
     private final Resource resourceMovies;
     private final Resource resourceGames;
-    public CSVProcessor(ResourceLoader resourceLoader) {
+    private final Resource resourceAlbums;
+    private final Resource resourceArtists;
+    private final ArtistRepository artistRepository;
+
+
+    public CSVProcessor(ResourceLoader resourceLoader, ArtistRepository artistRepository) {
         resourceMovies = resourceLoader.getResource("classpath:movies.csv");
         resourceGames= resourceLoader.getResource("classpath:Video Games Data.csv");
+        resourceAlbums= resourceLoader.getResource("classpath:spotify_albums.csv");
+        resourceArtists= resourceLoader.getResource("classpath:spotify_artists.csv");
+        this.artistRepository=artistRepository;
     }
     public List<Movie> loadMovies() {
         List<Movie> movies=new ArrayList<>();
@@ -59,6 +70,7 @@ public class CSVProcessor {
                     movie.setProductionCountries(record[21]);
                     movie.setSpokenLanguages(record[22]);
                     movie.setKeywords(record[23]);
+                    movie.setReviews(new ArrayList<>());
                     movies.add(movie);
                     record=csvReader.readNext();
                 }catch (Exception e){
@@ -82,27 +94,35 @@ public class CSVProcessor {
 
     public  long convertToEpoch(String dateString) throws ParseException {
         // Define the date format according to your input
-        try{
-            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-            // Set the time zone to UTC to avoid time zone issues
-            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+       try{
+           if(dateString.length()<=4){
+               dateString="1/1/"+dateString;
+           }
+           try{
+               SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+               // Set the time zone to UTC to avoid time zone issues
+               sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-            // Parse the date string to a Date object
-            Date date = sdf.parse(dateString);
+               // Parse the date string to a Date object
+               Date date = sdf.parse(dateString);
 
-            // Convert Date to epoch time in milliseconds
-            return date.getTime();
-        }catch (ParseException e){
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-            // Set the time zone to UTC to avoid time zone issues
-            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+               // Convert Date to epoch time in milliseconds
+               return date.getTime();
+           }catch (ParseException e){
+               SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+               // Set the time zone to UTC to avoid time zone issues
+               sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-            // Parse the date string to a Date object
-            Date date = sdf.parse(dateString);
+               // Parse the date string to a Date object
+               Date date = sdf.parse(dateString);
 
-            // Convert Date to epoch time in milliseconds
-            return date.getTime();
-        }
+               // Convert Date to epoch time in milliseconds
+               return date.getTime();
+           }
+       }catch (Exception e){
+           return 1722524555;
+       }
+
 
     }
     public List<Game> loadGames(){
@@ -131,7 +151,7 @@ public class CSVProcessor {
                 game.setGameGenres(Arrays.stream(resource[3].split(",")).map(GameGenre::fromString).toList());
                 game.setPublisher(resource[4]);
                 game.setDeveloper(resource[5]);
-                game.setReviewList(new ArrayList<>());
+                game.setReviews(new ArrayList<>());
 
                 game.setFinalGrade(resource[6].isEmpty()?0.0:Double.parseDouble(resource[6]));
                 game.setTotalSales(resource[7].isEmpty()?0.0:Double.parseDouble(resource[7]));
@@ -146,6 +166,60 @@ public class CSVProcessor {
         System.out.println("done game 1");
         return games;
     }
+
+    public List<Music> loadAlbums(){
+        List<Music> albums=new ArrayList<>();
+
+        try (CSVReader csvReader = new CSVReader(new FileReader(resourceAlbums.getFile()))) {
+            csvReader.readNext();
+            String[] resource = csvReader.readNext();
+            while (csvReader.getLinesRead() < 15000) {
+                Music music=new Music();
+                music.setTitle(resource[8]);
+                if(albums.stream().anyMatch(album1 -> album1.getTitle().equals(music.getTitle()))){
+                    resource=csvReader.readNext();
+                    continue;
+                }
+                music.setArtist(artistRepository.findById(resource[2]).orElse(null));
+                if(resource[7].contains("url':"))
+                    music.setImageUrl(resource[7].split("url':")[1].split(",")[0].replaceAll("'",""));
+                else music.setImageUrl("");
+                music.setReleaseDate(convertToEpoch(resource[9]));
+                music.setTotalTracks(Long.valueOf(resource[11]));
+                music.setReviews(new ArrayList<>());
+                music.setFinalGrade((double) 0);
+                albums.add(music);
+                resource=csvReader.readNext();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        System.out.println("done music 1");
+        return albums;
+    }
+
+    public List<Artist> loadArtists(){
+        List<Artist> artists=new ArrayList<>();
+
+        try (CSVReader csvReader = new CSVReader(new FileReader(resourceArtists.getFile()))) {
+            csvReader.readNext();
+            String[] resource = csvReader.readNext();
+            while (csvReader.getLinesRead() < 15000) {
+              Artist a=new Artist();
+              a.setPopularity(resource[1]);
+              a.setId(resource[4]);
+              a.setGenres(Arrays.stream(resource[3].replaceAll("]\\[","").split(",")).toList());
+              a.setName(resource[5]);
+              artists.add(a);
+              resource=csvReader.readNext();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        System.out.println("done music 1");
+        return artists;
+    }
+
 
 
 

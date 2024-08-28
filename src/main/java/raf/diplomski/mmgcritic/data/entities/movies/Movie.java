@@ -2,6 +2,7 @@ package raf.diplomski.mmgcritic.data.entities.movies;
 
 import jakarta.persistence.*;
 import lombok.*;
+import raf.diplomski.mmgcritic.data.entities.Review;
 
 import java.util.List;
 
@@ -81,6 +82,9 @@ public class Movie {
 
     @Column(name = "keywords", length = Integer.MAX_VALUE)
     private String keywords;
+
+    @OneToMany
+    private List<Review> reviews;
 
 
 }

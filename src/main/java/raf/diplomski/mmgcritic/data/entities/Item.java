@@ -11,17 +11,13 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Data
-@Table(name = "items")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @DiscriminatorColumn(name = "item_type", discriminatorType = DiscriminatorType.STRING)
 public class Item {
     @Id @GeneratedValue
     private Long id;
-    private String name;
-    private String videoUrl;
-    private String description;
     private Double finalGrade;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviewList;
-    private Long releaseDate;
+
 }

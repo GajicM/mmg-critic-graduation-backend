@@ -11,6 +11,5 @@ public class ReviewDto {
     private String comment;
     private Integer grade;
     private Long datePublished;
-    private Long itemId;
     private Long userId;
 }

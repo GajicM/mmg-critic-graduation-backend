@@ -21,9 +21,6 @@ public class Review {
 
     private Long datePublished;
 
-    @ManyToOne
-    private Item item;
-
     @ManyToOne(cascade = CascadeType.PERSIST)
     private User user;
 }

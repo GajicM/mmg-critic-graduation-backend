@@ -1,13 +1,17 @@
 package raf.diplomski.mmgcritic.services.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import raf.diplomski.mmgcritic.data.dto.ReviewDto;
 import raf.diplomski.mmgcritic.data.entities.Review;
+import raf.diplomski.mmgcritic.data.entities.ReviewType;
+import raf.diplomski.mmgcritic.data.entities.games.Game;
+import raf.diplomski.mmgcritic.data.entities.movies.Movie;
+import raf.diplomski.mmgcritic.data.entities.music.Music;
 import raf.diplomski.mmgcritic.data.mapper.ReviewMapper;
-import raf.diplomski.mmgcritic.repositories.ItemRepository;
-import raf.diplomski.mmgcritic.repositories.ReviewRepository;
-import raf.diplomski.mmgcritic.repositories.UserRepository;
+import raf.diplomski.mmgcritic.repositories.*;
 import raf.diplomski.mmgcritic.services.ReviewService;
 
 import java.util.List;
@@ -17,17 +21,14 @@ import java.util.List;
 public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final ReviewMapper mapper;
-    private final ItemRepository itemRepository;
+    private final MovieRepository movieRepository;
+    private final MusicRepository musicRepository;
+    private final GameRepository gameRepository;
     private final UserRepository userRepository;
 
     @Override
     public List<ReviewDto> getReviewsForUser(Long userId) {
         return reviewRepository.findAllByUser_Id(userId).stream().map(mapper::toDto).toList();
-    }
-
-    @Override
-    public List<ReviewDto> getReviewsForItem(Long itemId) {
-        return reviewRepository.findAllByItem_Id(itemId).stream().map(mapper::toDto).toList();
     }
 
     @Override
@@ -41,12 +42,40 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public ReviewDto addReview(ReviewDto reviewDto) {
+    public ReviewDto addReview(ReviewDto reviewDto,Long id, ReviewType type) {
         Review review=mapper.fromDto(reviewDto);
-        review.setItem(itemRepository.findById(reviewDto.getItemId()).orElseThrow());
         //TODO uzeti iz spring security utils at some point
         review.setUser(userRepository.findById(reviewDto.getUserId()).orElseThrow());
-        return  mapper.toDto(reviewRepository.save(review));
+       review= reviewRepository.save(review);
+
+        switch(type){
+            case  ReviewType.MUSIC:{
+               Music m= musicRepository.findById(id).orElseThrow();
+               m.getReviews().add(review);
+               musicRepository.save(m);
+               break;
+            }
+            case ReviewType.GAME:{
+               Game g= gameRepository.findById(id).orElseThrow();
+                g.getReviews().add(review);
+                gameRepository.save(g);
+               break;
+            }
+            case MOVIE:{
+               Movie m= movieRepository.findById(id).orElseThrow();
+                m.getReviews().add(review);
+                movieRepository.save(m);
+                break;
+            }
+            default:{
+                break;
+            }
+        }
+
+
+
+        return mapper.toDto(review);
+
     }
 
     @Override

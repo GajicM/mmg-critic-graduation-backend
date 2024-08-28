@@ -7,6 +7,8 @@ import raf.diplomski.mmgcritic.data.entities.games.Game;
 import raf.diplomski.mmgcritic.data.entities.music.Music;
 import raf.diplomski.mmgcritic.services.impl.MusicServiceImpl;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/music")
 @RequiredArgsConstructor
@@ -63,5 +65,20 @@ public class MusicController {
             return ResponseEntity.badRequest().build();
         }
     }
-
+    @GetMapping("/by-title/{title}")
+    public ResponseEntity<?> findAlbumsByTitleContaining(@PathVariable String title){
+        return ResponseEntity.ok(musicService.findAlbumsByTitleContaining(title));
+    }
+    @GetMapping("/newest")
+    public ResponseEntity<?> findAlbumsByReleaseDate(){
+        return ResponseEntity.ok(musicService.findAlbumsByReleaseDate());
+    }
+    @GetMapping("by-artist/{artistName}")
+    public ResponseEntity<?> findAlbumsByArtistName(@PathVariable String artistName){
+        return ResponseEntity.ok(musicService.findAlbumsByArtistName(artistName));
+    }
+    @GetMapping("/top-rated")
+    public ResponseEntity<?> findTopRatedAlbums() {
+        return ResponseEntity.ok(musicService.findTopRatedAlbums());
+    }
 }

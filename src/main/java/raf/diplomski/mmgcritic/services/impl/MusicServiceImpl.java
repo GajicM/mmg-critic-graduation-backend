@@ -2,7 +2,6 @@ package raf.diplomski.mmgcritic.services.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import raf.diplomski.mmgcritic.data.entities.games.Game;
 import raf.diplomski.mmgcritic.data.entities.music.Music;
 import raf.diplomski.mmgcritic.repositories.MusicRepository;
 
@@ -21,7 +20,7 @@ public class MusicServiceImpl {
     }
 
     public Music getMusicByName(String name) {
-        return musicRepository.findMusicByName(name).orElseThrow();
+        return musicRepository.findMusicByTitle(name).orElseThrow();
     }
 
     public Music addNewMusic(Music  music) {
@@ -42,4 +41,18 @@ public class MusicServiceImpl {
         }
 
     }
+    public List<Music> findAlbumsByTitleContaining(String string){
+        return musicRepository.findAllByTitleContaining(string);
+    }
+    public List<Music> findAlbumsByReleaseDate(){
+        return musicRepository.findNewestAlbums();
+    }
+    public List<Music> findAlbumsByArtistName(String artistName){
+        return musicRepository.findAlbumsByArtistName(artistName);
+    }
+    public List<Music> findTopRatedAlbums(){
+        return musicRepository.findTopRatedAlbums();
+    }
+
+
 }

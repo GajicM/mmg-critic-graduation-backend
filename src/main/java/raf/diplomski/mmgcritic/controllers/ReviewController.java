@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import raf.diplomski.mmgcritic.data.dto.ReviewDto;
+import raf.diplomski.mmgcritic.data.entities.ReviewType;
 import raf.diplomski.mmgcritic.services.ReviewService;
 
 @RestController
@@ -19,12 +20,7 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.getReviewsForUser(userId));
 
     }
-
-    @GetMapping("/item-id/{itemId}")
-    public ResponseEntity<?> getReviewsForItem(@PathVariable Long itemId) {
-        return ResponseEntity.ok(reviewService.getReviewsForItem(itemId));
-    }
-
+    
     @GetMapping("/all")
     public ResponseEntity<?> getAllReviews() {
         return ResponseEntity.ok(reviewService.getAllReviews());
@@ -38,14 +34,7 @@ public class ReviewController {
             return ResponseEntity.notFound().build();
         }
     }
-    @PostMapping
-    public ResponseEntity<?> addReview(@RequestBody ReviewDto reviewDto){
-        try {
-            return ResponseEntity.ok(reviewService.addReview(reviewDto));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
+
     @DeleteMapping("delete-id/{id}")
     public ResponseEntity<?> deleteReview(@PathVariable Long id){
         try {
@@ -58,6 +47,33 @@ public class ReviewController {
     public ResponseEntity<?> updateReview(@RequestBody ReviewDto reviewDto){
         try {
             return ResponseEntity.ok(reviewService.updateReview(reviewDto));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+
+    @PostMapping("/add-review/game/{id}")
+    public ResponseEntity<?>  createGameReview(@PathVariable Long id, @RequestBody ReviewDto reviewDto){
+        try {
+            return ResponseEntity.ok(reviewService.addReview(reviewDto,id, ReviewType.MUSIC));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+
+    }
+    @PostMapping("/add-review/movie/{id}")
+    public ResponseEntity<?> createMovieReview(@PathVariable Long id,@RequestBody ReviewDto reviewDto){
+        try {
+            return ResponseEntity.ok(reviewService.addReview(reviewDto,id, ReviewType.MUSIC));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+    @PostMapping("/add-review/album/{id}")
+    public ResponseEntity<?> createMusicReview(@PathVariable Long id,@RequestBody ReviewDto reviewDto){
+        try {
+            return ResponseEntity.ok(reviewService.addReview(reviewDto,id, ReviewType.MUSIC));
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }

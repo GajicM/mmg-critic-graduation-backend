@@ -3,6 +3,7 @@ package raf.diplomski.mmgcritic.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import raf.diplomski.mmgcritic.data.dto.ReviewDto;
 import raf.diplomski.mmgcritic.data.entities.movies.Movie;
 import raf.diplomski.mmgcritic.data.entities.movies.MovieGenre;
 import raf.diplomski.mmgcritic.services.impl.MovieServiceImpl;
@@ -119,5 +120,7 @@ public class MovieController {
             return ResponseEntity.notFound().build();
         }
     }
+
+
 
 }

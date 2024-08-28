@@ -12,7 +12,7 @@ public class ReviewMapper {
                 reviewDto.getComment(),
                 reviewDto.getGrade(),
                 reviewDto.getDatePublished(),
-                null,
+
                 null
         );
     }
@@ -23,7 +23,6 @@ public class ReviewMapper {
                 review.getComment(),
                 review.getGrade(),
                 review.getDatePublished(),
-                review.getItem().getId(),
                 review.getUser().getId()
         );
 
