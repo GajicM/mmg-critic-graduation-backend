@@ -1,6 +1,8 @@
 package raf.diplomski.mmgcritic.services.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import raf.diplomski.mmgcritic.data.dto.RegisterDto;
@@ -12,15 +14,16 @@ import raf.diplomski.mmgcritic.repositories.UserRepository;
 import raf.diplomski.mmgcritic.services.UserService;
 import raf.diplomski.mmgcritic.utils.SpringSecurityUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private UserRepository userRepository;
-    private UserMapper userMapper;
-    private PasswordEncoder encoder;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
+    private final PasswordEncoder encoder;
 
     @Override
     public List<User> getAllUsers() {
@@ -99,4 +102,11 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User with email: " + username + " not found."));
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), new ArrayList<>());
+
+    }
 }

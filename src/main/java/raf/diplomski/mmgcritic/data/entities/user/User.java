@@ -18,10 +18,15 @@ import java.util.List;
 public class User {
     @Id @GeneratedValue
     private Long id;
+    @NotNull
+    private String username;
     private String firstName;
     private String lastName;
-    @NotNull @Email
+    @NotNull @Column(unique = true)
     private String email;
+
+
+
     private String phoneNumber;
     private String password;
     @Enumerated(EnumType.STRING)

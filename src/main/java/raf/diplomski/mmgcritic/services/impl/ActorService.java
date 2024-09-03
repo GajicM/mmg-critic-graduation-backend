@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ActorService {
-    private ActorRepository actorRepository;
+    private final ActorRepository actorRepository;
     public Actor createActor(Actor actor){
         try{
             return actorRepository.save(actor);

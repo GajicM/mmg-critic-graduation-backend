@@ -5,6 +5,7 @@ import raf.diplomski.mmgcritic.data.dto.ReviewDto;
 import raf.diplomski.mmgcritic.data.entities.ReviewType;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public interface ReviewService {
@@ -21,4 +22,6 @@ public interface ReviewService {
     Boolean deleteReview(Long id);
 
     ReviewDto updateReview(ReviewDto reviewDto);
+
+    Optional<ReviewDto> getReviewForUserAndItem(long userId, Long itemId, ReviewType type);
 }

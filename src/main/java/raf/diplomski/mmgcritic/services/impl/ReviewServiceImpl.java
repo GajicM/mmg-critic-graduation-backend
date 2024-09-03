@@ -15,6 +15,7 @@ import raf.diplomski.mmgcritic.repositories.*;
 import raf.diplomski.mmgcritic.services.ReviewService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -45,25 +46,34 @@ public class ReviewServiceImpl implements ReviewService {
     public ReviewDto addReview(ReviewDto reviewDto,Long id, ReviewType type) {
         Review review=mapper.fromDto(reviewDto);
         //TODO uzeti iz spring security utils at some point
-        review.setUser(userRepository.findById(reviewDto.getUserId()).orElseThrow());
-       review= reviewRepository.save(review);
+        review.setUser(userRepository.findByUsername(reviewDto.getUsername()).orElseThrow());
+        review= reviewRepository.save(review);
 
         switch(type){
             case  ReviewType.MUSIC:{
                Music m= musicRepository.findById(id).orElseThrow();
                m.getReviews().add(review);
+               m.setVoteCount(m.getVoteCount()+1);
+                double res=(m.getFinalGrade()*(m.getVoteCount()-1)+review.getGrade())/ m.getVoteCount();
+               m.setFinalGrade(res);
                musicRepository.save(m);
                break;
             }
             case ReviewType.GAME:{
                Game g= gameRepository.findById(id).orElseThrow();
                 g.getReviews().add(review);
+                g.setVoteCount(g.getVoteCount()+1);
+                double res=(g.getFinalGrade()*(g.getVoteCount()-1)+review.getGrade())/ g.getVoteCount();
+                g.setFinalGrade(res);
                 gameRepository.save(g);
                break;
             }
             case MOVIE:{
                Movie m= movieRepository.findById(id).orElseThrow();
                 m.getReviews().add(review);
+                m.setVoteCount(m.getVoteCount()+1);
+                double res=(m.getVoteAverage()*(m.getVoteCount()-1)+review.getGrade())/ m.getVoteCount();
+                m.setVoteAverage(res);
                 movieRepository.save(m);
                 break;
             }
@@ -96,5 +106,42 @@ public class ReviewServiceImpl implements ReviewService {
         review.setGrade(reviewDto.getGrade());
         review.setComment(reviewDto.getComment());
         return mapper.toDto(reviewRepository.save(review));
+    }
+
+    @Override
+    public Optional<ReviewDto> getReviewForUserAndItem(long userId, Long itemId, ReviewType type) {
+        switch(type){
+            case  ReviewType.MUSIC:{
+                Music m= musicRepository.findById(itemId).orElseThrow();
+                for(Review r :m.getReviews()){
+                   if(r.getUser().getId()==userId){
+                       return Optional.ofNullable(mapper.toDto(r));
+                   }
+                }
+                break;
+            }
+            case ReviewType.GAME:{
+                Game g= gameRepository.findById(itemId).orElseThrow();
+                for(Review r :g.getReviews()){
+                    if(r.getUser().getId()==userId){
+                        return Optional.ofNullable(mapper.toDto(r));
+                    }
+                }
+                break;
+            }
+            case MOVIE:{
+                Movie m= movieRepository.findById(itemId).orElseThrow();
+                for(Review r :m.getReviews()){
+                    if(r.getUser().getId()==userId){
+                        return Optional.ofNullable(mapper.toDto(r));
+                    }
+                }
+                break;
+            }
+            default:{
+                break;
+            }
+        }
+        return Optional.empty();
     }
 }

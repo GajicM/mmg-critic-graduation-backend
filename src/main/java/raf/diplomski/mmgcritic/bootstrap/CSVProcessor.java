@@ -70,6 +70,8 @@ public class CSVProcessor {
                     movie.setProductionCountries(record[21]);
                     movie.setSpokenLanguages(record[22]);
                     movie.setKeywords(record[23]);
+                    if(movie.getVoteCount()==null)
+                        movie.setVoteAverage(0.0);
                     movie.setReviews(new ArrayList<>());
                     movies.add(movie);
                     record=csvReader.readNext();
@@ -156,6 +158,7 @@ public class CSVProcessor {
                 game.setFinalGrade(resource[6].isEmpty()?0.0:Double.parseDouble(resource[6]));
                 game.setTotalSales(resource[7].isEmpty()?0.0:Double.parseDouble(resource[7]));
                 game.setReleaseDate(resource[12].isEmpty()?0L:convertToEpoch(resource[12]));
+                game.setVoteCount(0L);
       //          System.out.println(game);
                 games.add(game);
                 resource=csvReader.readNext();
@@ -180,14 +183,22 @@ public class CSVProcessor {
                     resource=csvReader.readNext();
                     continue;
                 }
-                music.setArtist(artistRepository.findById(resource[2]).orElse(null));
+                if(artistRepository.findById(resource[2]).isPresent())
+                    music.setArtist(artistRepository.findById(resource[2]).orElse(null));
+                else
+                {
+                    resource=csvReader.readNext();
+                    continue;
+                }
                 if(resource[7].contains("url':"))
                     music.setImageUrl(resource[7].split("url':")[1].split(",")[0].replaceAll("'",""));
-                else music.setImageUrl("");
+                else
+                    music.setImageUrl("");
                 music.setReleaseDate(convertToEpoch(resource[9]));
                 music.setTotalTracks(Long.valueOf(resource[11]));
                 music.setReviews(new ArrayList<>());
                 music.setFinalGrade((double) 0);
+                music.setVoteCount( 0L);
                 albums.add(music);
                 resource=csvReader.readNext();
             }

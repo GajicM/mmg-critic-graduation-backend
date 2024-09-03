@@ -23,7 +23,7 @@ public class ReviewMapper {
                 review.getComment(),
                 review.getGrade(),
                 review.getDatePublished(),
-                review.getUser().getId()
+                review.getUser().getUsername()
         );
 
     }

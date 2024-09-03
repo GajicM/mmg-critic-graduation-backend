@@ -15,6 +15,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import raf.diplomski.mmgcritic.filters.JwtFilter;
+import raf.diplomski.mmgcritic.services.UserService;
+import raf.diplomski.mmgcritic.services.impl.UserServiceImpl;
 
 @Configuration
 @EnableWebSecurity
@@ -23,16 +25,17 @@ public class SpringSecurityConfig {
 
     private final JwtFilter jwtFilter;
     private final PasswordEncoder bCryptPasswordEncoder;
-
-    public SpringSecurityConfig(JwtFilter jwtFilter, PasswordEncoder bCryptPasswordEncoder) {
+    private final UserService userService;
+    public SpringSecurityConfig(JwtFilter jwtFilter, PasswordEncoder bCryptPasswordEncoder,UserService userService) {
         this.jwtFilter = jwtFilter;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.userService=userService;
     }
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(username -> null);
+        authProvider.setUserDetailsService(this.userService);
         authProvider.setPasswordEncoder(this.bCryptPasswordEncoder);
         return authProvider;
     }

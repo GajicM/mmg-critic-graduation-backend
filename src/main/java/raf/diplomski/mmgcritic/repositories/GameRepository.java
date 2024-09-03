@@ -23,7 +23,7 @@ public interface GameRepository extends JpaRepository<Game,Long> {
    @Query("SELECT game FROM Game game where game.developer like %:company% ORDER BY game.finalGrade DESC   LIMIT 25")
    List<Game> getTopRatedByDeveloper(@Param("company") String company);
 
-   @Query("Select game from Game game where game.releaseDate>1590467599000 order by game.finalGrade desc LIMIT 25")
+   @Query("Select game from Game game where game.releaseDate>1580467599000 order by game.finalGrade desc LIMIT 25")
    List<Game> getNewGamesByTopRated();
 
    @Query("SELECT game FROM Game  game where :platform member of game.platforms order by game.releaseDate desc LIMIT 25")

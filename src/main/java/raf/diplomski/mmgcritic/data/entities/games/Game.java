@@ -32,7 +32,7 @@ public class Game  {
     private List<String> platforms;
     private String imageUrl;
     private Double totalSales; //in millions
-
+    private Long voteCount;
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

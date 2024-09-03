@@ -9,6 +9,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.web.bind.annotation.*;
 import raf.diplomski.mmgcritic.data.dto.LoginDto;
 import raf.diplomski.mmgcritic.data.dto.RegisterDto;
+import raf.diplomski.mmgcritic.data.dto.TokenDto;
 import raf.diplomski.mmgcritic.data.entities.user.User;
 import raf.diplomski.mmgcritic.jwtUtils.JwtUtil;
 import raf.diplomski.mmgcritic.services.UserService;
@@ -34,13 +35,15 @@ public class AuthController {
             e.printStackTrace();
             return ResponseEntity.status(401).build();
         }
-        return ResponseEntity.ok(jwtUtil.generateToken(userService.getUserByEmail(loginRequest.getEmail())));
+        return ResponseEntity.ok(new TokenDto(jwtUtil.generateToken(userService.getUserByEmail(loginRequest.getEmail()))));
     }
+
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterDto registerDto){
         try{
          return ResponseEntity.ok(userService.register(registerDto));
         }catch (Exception e){
+            e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
 

@@ -10,6 +10,7 @@ import java.util.List;
 public class UserMapper {
     public UserDto toDto(User user) {
         return new UserDto(user.getId(),
+                user.getUsername(),
                 user.getFirstName(),
                 user.getLastName(),
                 user.getEmail(),
@@ -20,6 +21,7 @@ public class UserMapper {
 
     public User fromDto(UserDto dto) {
         return new User(0L,
+                dto.getUsername(),
                 dto.getFirstName(),
                 dto.getLastName(),
                 dto.getEmail(),

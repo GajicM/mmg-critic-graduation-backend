@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import org.springframework.stereotype.Repository;
+import raf.diplomski.mmgcritic.data.entities.Review;
 import raf.diplomski.mmgcritic.data.entities.music.Music;
 
 import java.util.List;
@@ -24,4 +25,5 @@ public interface MusicRepository extends JpaRepository<Music,Long> {
 
     @Query("select m from Music m ORDER BY m.finalGrade desc LIMIT 25 ")
     List<Music> findTopRatedAlbums();
+
 }

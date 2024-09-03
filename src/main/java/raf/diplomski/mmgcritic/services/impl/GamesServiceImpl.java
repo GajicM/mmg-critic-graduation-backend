@@ -2,8 +2,10 @@ package raf.diplomski.mmgcritic.services.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import raf.diplomski.mmgcritic.data.dto.GameDto;
 import raf.diplomski.mmgcritic.data.entities.games.Game;
 import raf.diplomski.mmgcritic.data.entities.games.GameGenre;
+import raf.diplomski.mmgcritic.data.mapper.GameMapper;
 import raf.diplomski.mmgcritic.repositories.GameRepository;
 
 import java.util.List;
@@ -12,24 +14,24 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GamesServiceImpl {
     private final GameRepository gameRepository;
+    private final GameMapper mapper;
 
-
-    public List<Game> getAllGames() {
-        return gameRepository.findAll();
+    public List<GameDto> getAllGames() {
+        return gameRepository.findAll().stream().map(mapper::toDto).toList();
     }
 
-    public Game getGameById(Long id) {
-        return gameRepository.findById(id).orElseThrow();
+    public GameDto getGameById(Long id) {
+        return mapper.toDto(gameRepository.findById(id).orElseThrow());
     }
 
-    public Game getGameByName(String name) {
-        return gameRepository.findAllByTitle(name).orElseThrow();
+    public GameDto getGameByName(String name) {
+        return mapper.toDto(gameRepository.findAllByTitle(name).orElseThrow());
     }
 
-    public Game addNewGame(Game game) {
-        return gameRepository.save(game);
+    public GameDto addNewGame(Game game) {
+        return mapper.toDto(gameRepository.save(game));
     }
-    public Game updateGame(Game game){
+    public GameDto updateGame(Game game){
         //TODO check what i want to update in future
         Game g=gameRepository.findById(game.getId()).orElseThrow();
         g.setGameGenres(game.getGameGenres());
@@ -37,7 +39,7 @@ public class GamesServiceImpl {
         g.setFinalGrade(game.getFinalGrade());
         g.setVideoUrl(game.getVideoUrl());
         g.setDescription(game.getDescription());
-        return gameRepository.save(game);
+        return mapper.toDto(gameRepository.save(game));
     }
 
     public boolean deleteGame(Long id) {
@@ -49,24 +51,24 @@ public class GamesServiceImpl {
         }
 
     }
-    public List<Game> findAllByTitleContaining(String name){
-        return gameRepository.findAllByTitleContains(name);
+    public List<GameDto> findAllByTitleContaining(String name){
+        return gameRepository.findAllByTitleContains(name).stream().map(mapper::toDto).toList();
     }
-    public List<Game> getNewGamesByGenre(GameGenre genre){
-        return gameRepository.getNewGamesByGenre(genre);
+    public List<GameDto> getNewGamesByGenre(GameGenre genre){
+        return gameRepository.getNewGamesByGenre(genre).stream().map(mapper::toDto).toList();
     }
-    public List<Game> getNewGamesByReleaseDate(){
-        return gameRepository.getNewGamesByReleaseDate();
+    public List<GameDto> getNewGamesByReleaseDate(){
+        return gameRepository.getNewGamesByReleaseDate().stream().map(mapper::toDto).toList();
     }
 
-    public List<Game> getTopRatedByDeveloper(String developer){
-        return gameRepository.getTopRatedByDeveloper(developer);
+    public List<GameDto> getTopRatedByDeveloper(String developer){
+        return gameRepository.getTopRatedByDeveloper(developer).stream().map(mapper::toDto).toList();
     }
-    public List<Game> getNewGamesByTopRated(){
-        return gameRepository.getNewGamesByTopRated();
+    public List<GameDto> getNewGamesByTopRated(){
+        return gameRepository.getNewGamesByTopRated().stream().map(mapper::toDto).toList();
     }
-    public List<Game> getGamesByPlatform(String platform){
-        return gameRepository.getGamesByPlatform(platform);
+    public List<GameDto> getGamesByPlatform(String platform){
+        return gameRepository.getGamesByPlatform(platform).stream().map(mapper::toDto).toList();
     }
 
 

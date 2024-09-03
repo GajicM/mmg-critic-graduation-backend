@@ -2,7 +2,9 @@ package raf.diplomski.mmgcritic.services.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import raf.diplomski.mmgcritic.data.dto.MusicDto;
 import raf.diplomski.mmgcritic.data.entities.music.Music;
+import raf.diplomski.mmgcritic.data.mapper.MusicMapper;
 import raf.diplomski.mmgcritic.repositories.MusicRepository;
 
 import java.util.List;
@@ -11,23 +13,24 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MusicServiceImpl {
     private final MusicRepository musicRepository;
-    public List<Music> getAllMusic() {
-        return musicRepository.findAll();
+    private final MusicMapper mapper;
+    public List<MusicDto> getAllMusic() {
+        return musicRepository.findAll().stream().map(mapper::toDto).toList();
     }
 
-    public Music getMusicById(Long id) {
-        return musicRepository.findById(id).orElseThrow();
+    public MusicDto getMusicById(Long id) {
+        return mapper.toDto(musicRepository.findById(id).orElseThrow());
     }
 
-    public Music getMusicByName(String name) {
-        return musicRepository.findMusicByTitle(name).orElseThrow();
+    public MusicDto getMusicByName(String name) {
+        return mapper.toDto(musicRepository.findMusicByTitle(name).orElseThrow()) ;
     }
 
-    public Music addNewMusic(Music  music) {
-        return musicRepository.save(music);
+    public MusicDto addNewMusic(MusicDto  music) {
+        return mapper.toDto(musicRepository.save(mapper.fromDto(music)));
     }
 
-    public Music updateMusic(Music music) {
+    public MusicDto updateMusic(MusicDto music) {
         //todo cba rn
         return music;
     }
@@ -41,17 +44,17 @@ public class MusicServiceImpl {
         }
 
     }
-    public List<Music> findAlbumsByTitleContaining(String string){
-        return musicRepository.findAllByTitleContaining(string);
+    public List<MusicDto> findAlbumsByTitleContaining(String string){
+        return musicRepository.findAllByTitleContaining(string).stream().map(mapper::toDto).toList();
     }
-    public List<Music> findAlbumsByReleaseDate(){
-        return musicRepository.findNewestAlbums();
+    public List<MusicDto> findAlbumsByReleaseDate(){
+        return musicRepository.findNewestAlbums().stream().map(mapper::toDto).toList();
     }
-    public List<Music> findAlbumsByArtistName(String artistName){
-        return musicRepository.findAlbumsByArtistName(artistName);
+    public List<MusicDto> findAlbumsByArtistName(String artistName){
+        return musicRepository.findAlbumsByArtistName(artistName).stream().map(mapper::toDto).toList();
     }
-    public List<Music> findTopRatedAlbums(){
-        return musicRepository.findTopRatedAlbums();
+    public List<MusicDto> findTopRatedAlbums(){
+        return musicRepository.findTopRatedAlbums().stream().map(mapper::toDto).toList();
     }
 
 

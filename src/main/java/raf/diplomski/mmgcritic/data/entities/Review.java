@@ -1,5 +1,6 @@
 package raf.diplomski.mmgcritic.data.entities;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

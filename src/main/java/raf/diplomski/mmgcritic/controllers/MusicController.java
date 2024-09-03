@@ -3,8 +3,7 @@ package raf.diplomski.mmgcritic.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import raf.diplomski.mmgcritic.data.entities.games.Game;
-import raf.diplomski.mmgcritic.data.entities.music.Music;
+import raf.diplomski.mmgcritic.data.dto.MusicDto;
 import raf.diplomski.mmgcritic.services.impl.MusicServiceImpl;
 
 import java.util.List;
@@ -40,7 +39,7 @@ public class MusicController {
     }
 
     @PostMapping("/new-music")
-    public ResponseEntity<?> addNewMusic(@RequestBody Music music) {
+    public ResponseEntity<?> addNewMusic(@RequestBody MusicDto music) {
         try {
             return ResponseEntity.ok(musicService.addNewMusic(music));
         } catch (Exception e) {
@@ -49,7 +48,7 @@ public class MusicController {
     }
 
     @PutMapping("/update-music")
-    public ResponseEntity<?> updateMusic(@RequestBody Music music) {
+    public ResponseEntity<?> updateMusic(@RequestBody MusicDto music) {
         try {
             return ResponseEntity.ok(musicService.updateMusic(music));
         } catch (Exception e) {

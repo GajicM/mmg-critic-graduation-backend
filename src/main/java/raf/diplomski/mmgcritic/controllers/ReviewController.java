@@ -1,12 +1,12 @@
 package raf.diplomski.mmgcritic.controllers;
 
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import raf.diplomski.mmgcritic.data.dto.ReviewDto;
 import raf.diplomski.mmgcritic.data.entities.ReviewType;
 import raf.diplomski.mmgcritic.services.ReviewService;
-
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
@@ -20,7 +20,7 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.getReviewsForUser(userId));
 
     }
-    
+
     @GetMapping("/all")
     public ResponseEntity<?> getAllReviews() {
         return ResponseEntity.ok(reviewService.getAllReviews());
@@ -56,8 +56,9 @@ public class ReviewController {
     @PostMapping("/add-review/game/{id}")
     public ResponseEntity<?>  createGameReview(@PathVariable Long id, @RequestBody ReviewDto reviewDto){
         try {
-            return ResponseEntity.ok(reviewService.addReview(reviewDto,id, ReviewType.MUSIC));
+            return ResponseEntity.ok(reviewService.addReview(reviewDto,id, ReviewType.GAME));
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
 
@@ -65,7 +66,7 @@ public class ReviewController {
     @PostMapping("/add-review/movie/{id}")
     public ResponseEntity<?> createMovieReview(@PathVariable Long id,@RequestBody ReviewDto reviewDto){
         try {
-            return ResponseEntity.ok(reviewService.addReview(reviewDto,id, ReviewType.MUSIC));
+            return ResponseEntity.ok(reviewService.addReview(reviewDto,id, ReviewType.MOVIE));
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
@@ -75,8 +76,18 @@ public class ReviewController {
         try {
             return ResponseEntity.ok(reviewService.addReview(reviewDto,id, ReviewType.MUSIC));
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
+    }
+    @GetMapping("/get-review")
+    public ResponseEntity<?> getReview(@PathParam("userId") long userId,@PathParam("itemId") Long itemId, @PathParam("type") ReviewType type){
+        try {
+            return ResponseEntity.ok(reviewService.getReviewForUserAndItem(userId,itemId, type));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+
     }
 
 
