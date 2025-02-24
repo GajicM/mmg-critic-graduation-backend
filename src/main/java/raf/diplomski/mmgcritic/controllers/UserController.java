@@ -14,7 +14,7 @@ import raf.diplomski.mmgcritic.services.UserService;
 @RequestMapping("api/users")
 @RequiredArgsConstructor
 public class UserController {
-    private UserService userService;
+    private final UserService userService;
 
     @GetMapping
     public ResponseEntity<?> getAllUsers(){
@@ -70,7 +70,7 @@ public class UserController {
         return ResponseEntity.ok(userService.deleteUser(id));
     }
     @PutMapping("/update-role/{id}")
-    @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateUserRole(@PathVariable Long id,@RequestBody Role role){
         try {
             return ResponseEntity.ok(userService.updateRole(id, role));

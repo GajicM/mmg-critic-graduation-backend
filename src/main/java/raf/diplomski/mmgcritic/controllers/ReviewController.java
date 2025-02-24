@@ -71,7 +71,7 @@ public class ReviewController {
             return ResponseEntity.badRequest().build();
         }
     }
-    @PostMapping("/add-review/album/{id}")
+    @PostMapping("/add-review/music/{id}")
     public ResponseEntity<?> createMusicReview(@PathVariable Long id,@RequestBody ReviewDto reviewDto){
         try {
             return ResponseEntity.ok(reviewService.addReview(reviewDto,id, ReviewType.MUSIC));
@@ -85,6 +85,18 @@ public class ReviewController {
         try {
             return ResponseEntity.ok(reviewService.getReviewForUserAndItem(userId,itemId, type));
         } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+
+    }
+
+    @GetMapping("/generate-fake-reviews")
+    public ResponseEntity<?> createFakeReviews(@PathParam("id") Long id, @PathParam("type") ReviewType type){
+        System.out.println(type);
+        try {
+            return ResponseEntity.ok(reviewService.createFakeReviews(id,type));
+        } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
 

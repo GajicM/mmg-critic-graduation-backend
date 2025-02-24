@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import raf.diplomski.mmgcritic.data.entities.Item;
 import raf.diplomski.mmgcritic.data.entities.Review;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "game")
 @Data
 public class Game  {
     @Id

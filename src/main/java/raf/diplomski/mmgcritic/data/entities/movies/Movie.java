@@ -2,6 +2,7 @@ package raf.diplomski.mmgcritic.data.entities.movies;
 
 import jakarta.persistence.*;
 import lombok.*;
+import raf.diplomski.mmgcritic.data.entities.Item;
 import raf.diplomski.mmgcritic.data.entities.Review;
 
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
 public class Movie {
     @Id @GeneratedValue
     @Column(name = "id")
-    private Integer id;
+    private Long id;
 
     @Column(name = "title", length = Integer.MAX_VALUE)
     private String title;

@@ -38,7 +38,7 @@ public class MovieController {
         }
     }
 
-    @PostMapping("/new-game")
+    @PostMapping("/new-movie")
     public ResponseEntity<?> addNewMovie(@RequestBody Movie movie) {
         try {
             return ResponseEntity.ok(movieService.addNewMovie(movie));
@@ -47,16 +47,9 @@ public class MovieController {
         }
     }
 
-    @PutMapping("/update-game")
-    public ResponseEntity<?> updateMovie(@RequestBody Movie movie) {
-        try {
-            return ResponseEntity.ok(movieService.updateMovie(movie));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
 
-    @DeleteMapping("/delete-game/{id}")
+
+    @DeleteMapping("/delete-movie/{id}")
     public ResponseEntity<?> deleteMovie(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(movieService.deleteMovie(id));

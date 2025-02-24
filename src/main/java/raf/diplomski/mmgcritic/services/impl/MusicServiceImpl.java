@@ -30,10 +30,7 @@ public class MusicServiceImpl {
         return mapper.toDto(musicRepository.save(mapper.fromDto(music)));
     }
 
-    public MusicDto updateMusic(MusicDto music) {
-        //todo cba rn
-        return music;
-    }
+
 
     public Boolean deleteMusic(Long id){
         try {

@@ -16,8 +16,5 @@ import java.util.List;
 public class Item {
     @Id @GeneratedValue
     private Long id;
-    private Double finalGrade;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Review> reviewList;
 
 }

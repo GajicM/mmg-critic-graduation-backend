@@ -3,7 +3,6 @@ package raf.diplomski.mmgcritic.data.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import raf.diplomski.mmgcritic.data.entities.Review;
 import raf.diplomski.mmgcritic.data.entities.movies.MovieGenre;
 
 import java.util.List;
@@ -12,11 +11,12 @@ import java.util.List;
 @NoArgsConstructor
 public class MovieDto {
 
-    private Integer id;
+    private Long id;
     private String title;
     private Double voteAverage;
     private Integer voteCount;
     private String status;
+    private Long releaseDate;
     private Double revenue;
     private Integer runtime;
     private String backdropPath;

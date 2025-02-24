@@ -31,16 +31,7 @@ public class MovieServiceImpl {
         return mapper.toDto(movieRepository.save(movie));
     }
 
-    public MovieDto updateMovie(Movie movie){
-        //TODO FIX/ do better
-    /*    Movie m=  movieRepository.findById(movie.getId()).orElseThrow();
-        m.setDescription(movie.getDescription());
-        m.setGenre(movie.getGenre());
-        m.setFinalGrade(movie.getFinalGrade());
-        m.setReviewList(movie.getReviewList());
-        return movieRepository.save(m);*/
-        return mapper.toDto(movie);
-    }
+
     public Boolean deleteMovie(Long id){
         try{
             movieRepository.deleteById(id);

@@ -47,14 +47,6 @@ public class MusicController {
         }
     }
 
-    @PutMapping("/update-music")
-    public ResponseEntity<?> updateMusic(@RequestBody MusicDto music) {
-        try {
-            return ResponseEntity.ok(musicService.updateMusic(music));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
 
     @DeleteMapping("/delete-music/{id}")
     public ResponseEntity<?> deleteMusic(@PathVariable Long id) {

@@ -24,4 +24,6 @@ public interface ReviewService {
     ReviewDto updateReview(ReviewDto reviewDto);
 
     Optional<ReviewDto> getReviewForUserAndItem(long userId, Long itemId, ReviewType type);
+
+    List<ReviewDto> createFakeReviews(Long id, ReviewType reviewType);
 }

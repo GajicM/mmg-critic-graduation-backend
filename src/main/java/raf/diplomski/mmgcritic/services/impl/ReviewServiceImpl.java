@@ -4,18 +4,21 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import raf.diplomski.mmgcritic.bootstrap.DataGenerator;
 import raf.diplomski.mmgcritic.data.dto.ReviewDto;
 import raf.diplomski.mmgcritic.data.entities.Review;
 import raf.diplomski.mmgcritic.data.entities.ReviewType;
 import raf.diplomski.mmgcritic.data.entities.games.Game;
 import raf.diplomski.mmgcritic.data.entities.movies.Movie;
 import raf.diplomski.mmgcritic.data.entities.music.Music;
+import raf.diplomski.mmgcritic.data.entities.user.User;
 import raf.diplomski.mmgcritic.data.mapper.ReviewMapper;
 import raf.diplomski.mmgcritic.repositories.*;
 import raf.diplomski.mmgcritic.services.ReviewService;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +29,8 @@ public class ReviewServiceImpl implements ReviewService {
     private final MusicRepository musicRepository;
     private final GameRepository gameRepository;
     private final UserRepository userRepository;
+    private final DataGenerator dataGenerator;
+    private final ReviewMapper reviewMapper;
 
     @Override
     public List<ReviewDto> getReviewsForUser(Long userId) {
@@ -143,5 +148,22 @@ public class ReviewServiceImpl implements ReviewService {
             }
         }
         return Optional.empty();
+    }
+
+    @Override
+    public List<ReviewDto> createFakeReviews(Long id, ReviewType reviewType) {
+       List<Review> reviews= dataGenerator.generateReviews(5);
+       List<User> users=userRepository.findAll().stream().filter(user -> {
+           Random r= new Random();
+
+          return user.getId()<50 &&  user.getId() % (r.nextInt(5)+1)<3;
+       }).toList();
+       int i=0;
+       for(Review r: reviews){
+           i++;
+           r.setUser(users.get(i));
+           addReview(reviewMapper.toDto(r),id,reviewType);
+       }
+        return reviews.stream().map(reviewMapper::toDto).toList();
     }
 }

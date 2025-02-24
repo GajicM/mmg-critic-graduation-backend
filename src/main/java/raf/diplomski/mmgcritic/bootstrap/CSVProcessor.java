@@ -5,18 +5,23 @@ import com.opencsv.exceptions.CsvException;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
+import raf.diplomski.mmgcritic.data.entities.Review;
 import raf.diplomski.mmgcritic.data.entities.games.Game;
 import raf.diplomski.mmgcritic.data.entities.games.GameGenre;
 import raf.diplomski.mmgcritic.data.entities.movies.Movie;
 import raf.diplomski.mmgcritic.data.entities.movies.MovieGenre;
 import raf.diplomski.mmgcritic.data.entities.music.Artist;
 import raf.diplomski.mmgcritic.data.entities.music.Music;
+import raf.diplomski.mmgcritic.data.entities.user.User;
 import raf.diplomski.mmgcritic.repositories.ArtistRepository;
+import raf.diplomski.mmgcritic.repositories.ReviewRepository;
 
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 @Component
@@ -26,14 +31,16 @@ public class CSVProcessor {
     private final Resource resourceAlbums;
     private final Resource resourceArtists;
     private final ArtistRepository artistRepository;
+    private final ReviewRepository reviewRepository;
 
 
-    public CSVProcessor(ResourceLoader resourceLoader, ArtistRepository artistRepository) {
+    public CSVProcessor(ResourceLoader resourceLoader, ArtistRepository artistRepository, ReviewRepository reviewRepository) {
         resourceMovies = resourceLoader.getResource("classpath:movies.csv");
         resourceGames= resourceLoader.getResource("classpath:Video Games Data.csv");
         resourceAlbums= resourceLoader.getResource("classpath:spotify_albums.csv");
         resourceArtists= resourceLoader.getResource("classpath:spotify_artists.csv");
         this.artistRepository=artistRepository;
+        this.reviewRepository = reviewRepository;
     }
     public List<Movie> loadMovies() {
         List<Movie> movies=new ArrayList<>();
@@ -47,7 +54,7 @@ public class CSVProcessor {
                     if(record[19].isEmpty())
                         continue;
                     Movie movie = new Movie();
-                    movie.setId(Integer.valueOf(record[0]));
+                    movie.setId(Long.valueOf(record[0]));
                     movie.setTitle(record[1]);
                     movie.setVoteAverage(Double.parseDouble(record[2]));
                     movie.setVoteCount(Integer.parseInt(record[3]));
@@ -197,8 +204,10 @@ public class CSVProcessor {
                 music.setReleaseDate(convertToEpoch(resource[9]));
                 music.setTotalTracks(Long.valueOf(resource[11]));
                 music.setReviews(new ArrayList<>());
-                music.setFinalGrade((double) 0);
+
+                music.setFinalGrade(0.0);
                 music.setVoteCount( 0L);
+
                 albums.add(music);
                 resource=csvReader.readNext();
             }
@@ -230,6 +239,7 @@ public class CSVProcessor {
         System.out.println("done music 1");
         return artists;
     }
+
 
 
 

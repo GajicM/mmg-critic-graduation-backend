@@ -5,6 +5,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import raf.diplomski.mmgcritic.data.entities.Review;
 import raf.diplomski.mmgcritic.data.entities.games.Game;
 import raf.diplomski.mmgcritic.data.entities.movies.Movie;
 import raf.diplomski.mmgcritic.data.entities.music.Artist;
@@ -14,6 +15,7 @@ import raf.diplomski.mmgcritic.data.entities.user.User;
 import raf.diplomski.mmgcritic.repositories.GameRepository;
 import raf.diplomski.mmgcritic.repositories.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -27,10 +29,18 @@ public class BootstrapData  implements CommandLineRunner {
     private final MovieRepository movieRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ItemRepository itemRepository;
+    private final DataGenerator dataGenerator;
+    private final ReviewRepository reviewRepository;
 
     @Override
     public void run(String... args) throws Exception {
+        List<User> users;
+        List<Music> music;
+        List<Movie> movies;
+        List<Game> games;
         if(userRepository.count()==0){
+            users=dataGenerator.generateUsers(50);
             User u=new User();
             u.setRole(Role.ADMIN);
             u.setUsername("admin");
@@ -38,39 +48,46 @@ public class BootstrapData  implements CommandLineRunner {
             u.setPassword(passwordEncoder.encode("password"));
             u.setFirstName("Milos");
             u.setLastName("Gajic");
-            userRepository.save(u);
+            users.add(u);
+            userRepository.saveAll(users);
+
+            System.out.println("users done");
         }
 
         if(artistRepository.count()==0){
-            List<Artist> music=moviesCsvLoader.loadArtists();
-            if(music!=null){
-                artistRepository.saveAll(music);
+            List<Artist> artists=moviesCsvLoader.loadArtists();
+            if(artists!=null){
+                artistRepository.saveAll(artists);
                 System.out.println("artists dooone");
             }
         }
 
         if(musicRepository.count()==0){
-            List<Music> music=moviesCsvLoader.loadAlbums();
+           music=moviesCsvLoader.loadAlbums();
             if(music!=null){
-                musicRepository.saveAll(music);
+              music=  musicRepository.saveAll(music);
                 System.out.println("music dooone");
             }
         }
         if(movieRepository.count()==0){
-            List<Movie> movies=moviesCsvLoader.loadMovies();
+           movies=moviesCsvLoader.loadMovies();
             if(movies!=null){
-                movieRepository.saveAll(movies);
-                System.out.println("lmao done");
+               movies= movieRepository.saveAll(movies);
+                System.out.println("movies done");
             }
         }
-        System.out.println("movies done");
+
         if(gameRepository.count()==0){
-            List<Game> movies=moviesCsvLoader.loadGames();
-            if(movies!=null){
-                gameRepository.saveAll(movies);
-                System.out.println("lmao done");
+           games=moviesCsvLoader.loadGames();
+            if(games!=null){
+               games= gameRepository.saveAll(games);
+                System.out.println("games done");
             }
         }
+
+
+
+
 
 
     }

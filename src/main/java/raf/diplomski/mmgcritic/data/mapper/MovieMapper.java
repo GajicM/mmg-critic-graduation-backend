@@ -25,6 +25,7 @@ public class MovieMapper {
         movie.setVoteAverage(dto.getVoteAverage());
         movie.setVoteCount(dto.getVoteCount());
         movie.setStatus(dto.getStatus());
+        movie.setReleaseDate(dto.getReleaseDate());
         movie.setRevenue(dto.getRevenue());
         movie.setRuntime(dto.getRuntime());
         movie.setBackdropPath(dto.getBackdropPath());
@@ -66,6 +67,7 @@ public class MovieMapper {
         dto.setVoteAverage(movie.getVoteAverage());
         dto.setVoteCount(movie.getVoteCount());
         dto.setStatus(movie.getStatus());
+        dto.setReleaseDate(movie.getReleaseDate());
         dto.setRevenue(movie.getRevenue());
         dto.setRuntime(movie.getRuntime());
         dto.setBackdropPath(movie.getBackdropPath());

@@ -67,16 +67,17 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    //TODO fix and add ifs later
     @Override
     public Boolean updatePassword(String oldPassword,String newPassword) {
         Optional<User> optionalUser = userRepository.findByEmail(SpringSecurityUtil.getPrincipalEmail());
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            user.setPassword(encoder.encode(newPassword));
-            userRepository.save(user);
-            return true;
-        }
+            if(encoder.matches(oldPassword,user.getPassword())){
+                user.setPassword(encoder.encode(newPassword));
+                userRepository.save(user);
+                return true;
+            };
+            }
         return false;
 
     }
