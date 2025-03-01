@@ -44,7 +44,7 @@ public class SpringSecurityConfig {
     }
     @Bean
     public GrantedAuthorityDefaults grantedAuthorityDefaults() {
-        return new GrantedAuthorityDefaults(""); // Remove the ROLE_ prefix
+        return new GrantedAuthorityDefaults("");
     }
 
 

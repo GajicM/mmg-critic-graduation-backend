@@ -65,14 +65,14 @@ public class BootstrapData  implements CommandLineRunner {
         if(musicRepository.count()==0){
            music=moviesCsvLoader.loadAlbums();
             if(music!=null){
-              music=  musicRepository.saveAll(music);
+                musicRepository.saveAll(music);
                 System.out.println("music dooone");
             }
         }
         if(movieRepository.count()==0){
            movies=moviesCsvLoader.loadMovies();
             if(movies!=null){
-               movies= movieRepository.saveAll(movies);
+               movieRepository.saveAll(movies);
                 System.out.println("movies done");
             }
         }
@@ -80,7 +80,7 @@ public class BootstrapData  implements CommandLineRunner {
         if(gameRepository.count()==0){
            games=moviesCsvLoader.loadGames();
             if(games!=null){
-               games= gameRepository.saveAll(games);
+              gameRepository.saveAll(games);
                 System.out.println("games done");
             }
         }

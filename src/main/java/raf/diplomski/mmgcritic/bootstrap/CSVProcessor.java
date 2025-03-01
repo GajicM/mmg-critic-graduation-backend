@@ -166,7 +166,6 @@ public class CSVProcessor {
                 game.setTotalSales(resource[7].isEmpty()?0.0:Double.parseDouble(resource[7]));
                 game.setReleaseDate(resource[12].isEmpty()?0L:convertToEpoch(resource[12]));
                 game.setVoteCount(0L);
-      //          System.out.println(game);
                 games.add(game);
                 resource=csvReader.readNext();
             }
