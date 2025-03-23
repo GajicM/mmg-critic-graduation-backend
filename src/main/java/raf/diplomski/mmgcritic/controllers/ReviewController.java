@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import raf.diplomski.mmgcritic.data.dto.ReviewDto;
 import raf.diplomski.mmgcritic.data.entities.ReviewType;
 import raf.diplomski.mmgcritic.services.ReviewService;
+
+import java.util.NoSuchElementException;
+
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
@@ -100,6 +103,19 @@ public class ReviewController {
             return ResponseEntity.badRequest().build();
         }
 
+    }
+    @GetMapping("/leave-interaction")
+    public ResponseEntity<?> leaveInteraction(@PathParam("reviewId") Long reviewId, @PathParam("userId") Long userId, @PathParam("isLiked") Boolean isLiked){
+        try {
+            return ResponseEntity.ok(reviewService.leaveInteraction(reviewId,userId,isLiked));
+        }catch (NoSuchElementException elementException){
+            elementException.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
     }
 
 

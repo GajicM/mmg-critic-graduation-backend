@@ -1,12 +1,11 @@
 package raf.diplomski.mmgcritic.services.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import raf.diplomski.mmgcritic.bootstrap.DataGenerator;
 import raf.diplomski.mmgcritic.data.dto.ReviewDto;
 import raf.diplomski.mmgcritic.data.entities.Review;
+import raf.diplomski.mmgcritic.data.entities.ReviewInteraction;
 import raf.diplomski.mmgcritic.data.entities.ReviewType;
 import raf.diplomski.mmgcritic.data.entities.games.Game;
 import raf.diplomski.mmgcritic.data.entities.movies.Movie;
@@ -17,6 +16,7 @@ import raf.diplomski.mmgcritic.repositories.*;
 import raf.diplomski.mmgcritic.services.ReviewService;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 
@@ -31,10 +31,11 @@ public class ReviewServiceImpl implements ReviewService {
     private final UserRepository userRepository;
     private final DataGenerator dataGenerator;
     private final ReviewMapper reviewMapper;
+    private final ReviewInteractionRepository reviewInteractionRepository;
 
     @Override
     public List<ReviewDto> getReviewsForUser(Long userId) {
-        return reviewRepository.findAllByUser_Id(userId).stream().map(mapper::toDto).toList();
+        return reviewRepository.findAllByUserId(userId).stream().map(mapper::toDto).toList();
     }
 
     @Override
@@ -50,8 +51,9 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public ReviewDto addReview(ReviewDto reviewDto,Long id, ReviewType type) {
         Review review=mapper.fromDto(reviewDto);
-        //TODO uzeti iz spring security utils at some point
         review.setUser(userRepository.findByUsername(reviewDto.getUsername()).orElseThrow());
+        review.setReviewType(type);
+        review.setMediaId(id);
         review= reviewRepository.save(review);
 
         switch(type){
@@ -162,8 +164,34 @@ public class ReviewServiceImpl implements ReviewService {
        for(Review r: reviews){
            i++;
            r.setUser(users.get(i));
+
            addReview(reviewMapper.toDto(r),id,reviewType);
        }
         return reviews.stream().map(reviewMapper::toDto).toList();
     }
+    @Override
+    public ReviewDto leaveInteraction(Long reviewId, Long userId, Boolean isLiked) {
+        Review review = reviewRepository.findById(reviewId).orElseThrow();
+        List<ReviewInteraction> list = review.getReviewInteractionList();
+        Optional<ReviewInteraction> existingInteraction = list.stream()
+                .filter(ri -> Objects.equals(ri.getUser().getId(), userId))
+                .findFirst();
+
+        if (existingInteraction.isPresent()) {
+            ReviewInteraction single = existingInteraction.get();
+            single.setLiked(isLiked);
+            reviewInteractionRepository.save(single);
+        } else {
+            ReviewInteraction single = new ReviewInteraction();
+            User u = userRepository.findById(userId).orElseThrow();
+            single.setReview(review);
+            single.setUser(u);
+            single.setLiked(isLiked);
+            reviewInteractionRepository.save(single);
+            list.add(single);
+        }
+
+        return mapper.toDto(review);
+    }
+
 }

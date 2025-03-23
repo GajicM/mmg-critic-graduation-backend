@@ -33,5 +33,4 @@ public class User {
     private Role role;
     @OneToMany
     private List<Review> reviews;
-
 }

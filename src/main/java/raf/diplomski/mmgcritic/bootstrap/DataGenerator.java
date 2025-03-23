@@ -102,6 +102,7 @@ public class DataGenerator {
             r.setComment(comment);
             r.setDatePublished(datePublished);
             r.setGrade(grade);
+            r.setReviewInteractionList(List.of());
             reviews.add(r);
         }
         return reviews;

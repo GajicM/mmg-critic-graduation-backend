@@ -2,6 +2,7 @@ package raf.diplomski.mmgcritic.services;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+import raf.diplomski.mmgcritic.data.dto.PublicUserDto;
 import raf.diplomski.mmgcritic.data.dto.RegisterDto;
 import raf.diplomski.mmgcritic.data.dto.UserDto;
 import raf.diplomski.mmgcritic.data.entities.user.Role;
@@ -22,4 +23,6 @@ public interface UserService extends UserDetailsService {
     UserDto register(RegisterDto registerDto);
 
     UserDto updateRole(Long id, Role role);
+    PublicUserDto getUserPublicInfoById(Long id);
+    PublicUserDto getUserPublicInfoByUsername(String username);
 }

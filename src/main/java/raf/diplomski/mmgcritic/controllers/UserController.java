@@ -1,5 +1,6 @@
 package raf.diplomski.mmgcritic.controllers;
 
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,6 +17,7 @@ import raf.diplomski.mmgcritic.services.UserService;
 public class UserController {
     private final UserService userService;
 
+
     @GetMapping
     public ResponseEntity<?> getAllUsers(){
         return ResponseEntity.ok(userService.getAllUsers()) ;
@@ -25,6 +27,24 @@ public class UserController {
         try{
             return ResponseEntity.ok(userService.getUserById(id));
         }catch (Exception e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+    @GetMapping("/public/{id}")
+    public ResponseEntity<?> getUserPublicInfoById(@PathVariable Long id){
+        try{
+            return ResponseEntity.ok(userService.getUserPublicInfoById(id));
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
+    @GetMapping("/public/username/{username}")
+    public ResponseEntity<?> getUserPublicInfoByUsername(@PathVariable String username){
+        try{
+            return ResponseEntity.ok(userService.getUserPublicInfoByUsername(username));
+        }catch (Exception e){
+            e.printStackTrace();
             return ResponseEntity.notFound().build();
         }
     }

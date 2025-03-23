@@ -5,11 +5,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import raf.diplomski.mmgcritic.data.dto.RegisterDto;
-import raf.diplomski.mmgcritic.data.dto.UserDto;
+import raf.diplomski.mmgcritic.data.dto.*;
+import raf.diplomski.mmgcritic.data.entities.Review;
+import raf.diplomski.mmgcritic.data.entities.ReviewType;
 import raf.diplomski.mmgcritic.data.entities.user.Role;
 import raf.diplomski.mmgcritic.data.entities.user.User;
+import raf.diplomski.mmgcritic.data.mapper.ReviewMapper;
 import raf.diplomski.mmgcritic.data.mapper.UserMapper;
+import raf.diplomski.mmgcritic.repositories.ItemRepository;
+import raf.diplomski.mmgcritic.repositories.ReviewRepository;
 import raf.diplomski.mmgcritic.repositories.UserRepository;
 import raf.diplomski.mmgcritic.services.UserService;
 import raf.diplomski.mmgcritic.utils.SpringSecurityUtil;
@@ -24,6 +28,9 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder encoder;
+    private final ReviewRepository reviewRepository;
+    private final ItemRepository itemRepository;
+    private final ReviewMapper reviewMapper;
 
     @Override
     public List<User> getAllUsers() {
@@ -99,6 +106,30 @@ public class UserServiceImpl implements UserService {
        User u=userRepository.findById(id).orElseThrow();
        u.setRole(role);
        return userMapper.toDto(userRepository.save(u))  ;
+    }
+
+    @Override
+    public PublicUserDto getUserPublicInfoById(Long id) {
+        User u=userRepository.findById(id).orElseThrow();
+        List<Review> reviews=reviewRepository.findAllByUserId(id);
+        List<Object[]> recently=itemRepository.findRecentlyReviewedMediaByUser(id);
+       List<RecentlyReviewedMediaDto> recentlyDto= recently.stream().map(object ->
+             new RecentlyReviewedMediaDto(ReviewType.fromString((String)object[0]), (Long) object[1], (String) object[2], (Double) object[3], (Long) object[4], (String) object[5], (Long) object[6])
+        ).toList();
+
+        List<Object[]> highest=itemRepository.findTopReviewedMediaForUser(id);
+        List<HighestGradeReviewMediaDto> highestDto=highest.stream().map(object ->
+                new HighestGradeReviewMediaDto(ReviewType.fromString((String)object[0]), (Long) object[1], (String) object[2], (Double) object[3], (Long) object[4], (String) object[5], (Integer) object[6])).toList();
+
+
+        return userMapper.toPublicUserDto(u,recentlyDto,highestDto,reviews);
+    }
+
+    @Override
+    public PublicUserDto getUserPublicInfoByUsername(String username) {
+       User u= userRepository.findByUsername(username).orElseThrow();
+       return getUserPublicInfoById(u.getId());
+
     }
 
 

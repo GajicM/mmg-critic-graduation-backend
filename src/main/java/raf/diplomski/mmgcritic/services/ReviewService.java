@@ -26,4 +26,6 @@ public interface ReviewService {
     Optional<ReviewDto> getReviewForUserAndItem(long userId, Long itemId, ReviewType type);
 
     List<ReviewDto> createFakeReviews(Long id, ReviewType reviewType);
+
+    ReviewDto leaveInteraction(Long reviewId, Long userId, Boolean isLiked);
 }
