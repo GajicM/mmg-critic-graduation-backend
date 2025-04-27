@@ -15,10 +15,7 @@ import raf.diplomski.mmgcritic.data.mapper.ReviewMapper;
 import raf.diplomski.mmgcritic.repositories.*;
 import raf.diplomski.mmgcritic.services.ReviewService;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -161,13 +158,14 @@ public class ReviewServiceImpl implements ReviewService {
           return user.getId()<50 &&  user.getId() % (r.nextInt(5)+1)<3;
        }).toList();
        int i=0;
+       List<ReviewDto> toReturn=new ArrayList<>();
        for(Review r: reviews){
            i++;
            r.setUser(users.get(i));
 
-           addReview(reviewMapper.toDto(r),id,reviewType);
+           toReturn.add(addReview(reviewMapper.toDto(r),id,reviewType));
        }
-        return reviews.stream().map(reviewMapper::toDto).toList();
+        return toReturn;
     }
     @Override
     public ReviewDto leaveInteraction(Long reviewId, Long userId, Boolean isLiked) {
